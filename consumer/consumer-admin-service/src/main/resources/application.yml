@@ -1,0 +1,28 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: consumer-admin
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+dubbo:
+  scan:
+    base-packages: cn.edu.tsu.consumer.controller
+  protocol:
+    name: dubbo
+    port: -1
+    serialization: kryo
+  registry:
+    address: nacos://localhost:8848
+
+security:
+  oauth2:
+    client:
+      client-id: client
+      client-secret: secret
+      access-token-uri: http://localhost:9002/oauth/token
+      user-authorization-uri: http://localhost:9002/oauth/authorize
+    resource:
+      token-info-uri: http://localhost:9002/oauth/check_token
