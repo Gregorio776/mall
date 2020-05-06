@@ -12,6 +12,8 @@ import lombok.Data;
 @Data
 @Table(name = "ums_resource_category")
 public class UmsResourceCategory implements Serializable {
+    @Id
+    @GeneratedValue(generator = "JDBC")
     @Column(name = "id")
     private Long id;
 

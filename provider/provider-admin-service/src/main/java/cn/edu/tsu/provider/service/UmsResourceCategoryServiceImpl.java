@@ -7,6 +7,7 @@ import cn.edu.tsu.provider.mapper.UmsResourceCategoryMapper;
 import cn.edu.tsu.provider.api.UmsResourceCategoryService;
 import org.apache.dubbo.config.annotation.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,5 +23,21 @@ public class UmsResourceCategoryServiceImpl implements UmsResourceCategoryServic
     @Override
     public List<UmsResourceCategory> findAll() {
         return umsResourceCategoryMapper.selectAll();
+    }
+
+    @Override
+    public int insert(UmsResourceCategory umsResourceCategory) {
+        umsResourceCategory.setCreateTime(new Date());
+        return umsResourceCategoryMapper.insertSelective(umsResourceCategory);
+    }
+
+    @Override
+    public int delete(Long rcId) {
+        return umsResourceCategoryMapper.deleteByPrimaryKey(rcId);
+    }
+
+    @Override
+    public int update(UmsResourceCategory umsResourceCategory) {
+        return umsResourceCategoryMapper.updateByPrimaryKeySelective(umsResourceCategory);
     }
 }

@@ -6,10 +6,7 @@ import cn.edu.tsu.common.model.UmsResource;
 import cn.edu.tsu.provider.api.UmsResourceService;
 import cn.edu.tsu.provider.api.UmsRoleService;
 import org.apache.dubbo.config.annotation.Reference;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,9 +28,36 @@ public class UmsResourceController {
                                                       @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
                                                       @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum){
 
-        List<UmsResource> list = umsResourceService.list(categoryId, nameKeyword, urlKeyword, pageNum, pageSize);
-        CommonPage<UmsResource> umsResourceCommonPage = CommonPage.restPage(list);
-        return CommonResult.success(umsResourceCommonPage);
+        return CommonResult.success(umsResourceService.list(categoryId, nameKeyword, urlKeyword, pageNum, pageSize));
+    }
+
+    @PostMapping("/create")
+    public CommonResult<?> create(@RequestBody UmsResource umsResource){
+        int res = umsResourceService.insert(umsResource);
+        if(res>0){
+            return CommonResult.success(null);
+        }
+        return CommonResult.failed();
+    }
+
+    @PostMapping("/delete/{resourceId}")
+    public CommonResult<?> delete(@PathVariable Long resourceId){
+        int delete = umsResourceService.delete(resourceId);
+        if(delete>0){
+            return CommonResult.success(null);
+        }
+        return CommonResult.failed();
+    }
+
+    @PostMapping("/update/{resId}")
+    public CommonResult<?> update(@PathVariable Long resId,@RequestBody UmsResource umsResource){
+        umsResource.setId(resId);
+        int update = umsResourceService.update(umsResource);
+        if(update>0){
+            return CommonResult.success(null);
+        }
+        return CommonResult.failed();
+
     }
 
 }

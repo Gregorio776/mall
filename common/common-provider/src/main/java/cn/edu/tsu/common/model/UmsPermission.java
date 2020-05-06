@@ -12,6 +12,7 @@ import lombok.Data;
 @Data
 @Table(name = "ums_permission")
 public class UmsPermission implements Serializable {
+    @Id
     @Column(name = "id")
     private Long id;
 

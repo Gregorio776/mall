@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.tsu.provider.mapper.UmsRolePermissionRelationMapper">
+  <resultMap id="BaseResultMap" type="cn.edu.tsu.common.model.UmsRolePermissionRelation">
+    <!--@mbg.generated generated on Thu Apr 30 13:10:07 CST 2020.-->
+    <!--@Table ums_role_permission_relation-->
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+    <result column="permission_" jdbcType="BIGINT" property="permission" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated generated on Thu Apr 30 13:10:07 CST 2020.-->
+    id, role_id, permission_
+  </sql>
+</mapper>

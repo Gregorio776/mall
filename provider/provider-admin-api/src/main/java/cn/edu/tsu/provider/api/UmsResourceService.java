@@ -1,5 +1,7 @@
 package cn.edu.tsu.provider.api;
 
+import cn.edu.tsu.common.dto.CommonPage;
+import cn.edu.tsu.common.model.UmsMenu;
 import cn.edu.tsu.common.model.UmsResource;
 
 import java.util.List;
@@ -19,6 +21,10 @@ public interface UmsResourceService{
      * @param pageSize 页大小
      * @return {@link List<UmsResource>}
      */
-    List<UmsResource> list(Long categoryId,String nameKeyword,String urlKeyword,Integer pageNum,Integer pageSize);
+    CommonPage<UmsResource> list(Long categoryId, String nameKeyword, String urlKeyword, Integer pageNum, Integer pageSize);
+
+    int insert(UmsResource umsResource);
+    int delete(Long resourceId);
+    int update(UmsResource umsResource);
 
 }

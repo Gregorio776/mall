@@ -11,4 +11,7 @@ import java.util.List;
 public interface UmsResourceCategoryService{
 
     List<UmsResourceCategory> findAll();
+    int insert(UmsResourceCategory umsResourceCategory);
+    int delete(Long rcId);
+    int update(UmsResourceCategory umsResourceCategory);
 }

@@ -12,7 +12,9 @@ import lombok.Data;
 @Data
 @Table(name = "ums_menu")
 public class UmsMenu implements Serializable {
+    @Id
     @Column(name = "id")
+    @GeneratedValue(generator = "JDBC")
     private Long id;
 
     @Column(name = "parent_id")

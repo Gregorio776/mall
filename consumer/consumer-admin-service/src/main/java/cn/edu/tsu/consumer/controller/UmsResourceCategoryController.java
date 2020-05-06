@@ -4,9 +4,7 @@ import cn.edu.tsu.common.dto.CommonResult;
 import cn.edu.tsu.common.model.UmsResourceCategory;
 import cn.edu.tsu.provider.api.UmsResourceCategoryService;
 import org.apache.dubbo.config.annotation.Reference;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,6 +22,33 @@ public class UmsResourceCategoryController {
     public CommonResult<List<UmsResourceCategory>> listAll(){
         List<UmsResourceCategory> all = umsResourceCategoryService.findAll();
         return CommonResult.success(all);
+    }
+
+    @PostMapping("/create")
+    public CommonResult<?> create(@RequestBody UmsResourceCategory umsResourceCategory){
+        int insert = umsResourceCategoryService.insert(umsResourceCategory);
+        if(insert>0){
+            return CommonResult.success(null);
+        }
+        return CommonResult.failed();
+    }
+    @PostMapping("/delete/{id}")
+    public CommonResult<?> delete(@PathVariable Long id){
+        int delete = umsResourceCategoryService.delete(id);
+        if(delete>0){
+            return CommonResult.success(null);
+        }
+        return CommonResult.failed();
+
+    }
+    @PostMapping("/update/{id}")
+    public CommonResult<?> update(@PathVariable Long id,@RequestBody UmsResourceCategory umsResourceCategory){
+        umsResourceCategory.setId(id);
+        int update = umsResourceCategoryService.update(umsResourceCategory);
+        if(update>0){
+            return CommonResult.success(null);
+        }
+        return CommonResult.failed();
     }
 
 }

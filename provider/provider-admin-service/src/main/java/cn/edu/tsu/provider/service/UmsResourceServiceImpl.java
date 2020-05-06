@@ -1,5 +1,6 @@
 package cn.edu.tsu.provider.service;
 
+import cn.edu.tsu.common.dto.CommonPage;
 import cn.edu.tsu.common.model.UmsResource;
 import com.github.pagehelper.PageHelper;
 
@@ -9,9 +10,6 @@ import cn.edu.tsu.provider.api.UmsResourceService;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.util.StringUtil;
-
-import java.util.List;
 
 /**
  * @author  Gregorio
@@ -24,7 +22,7 @@ public class UmsResourceServiceImpl implements UmsResourceService{
     private UmsResourceMapper umsResourceMapper;
 
     @Override
-    public List<UmsResource> list(Long categoryId, String nameKeyword, String urlKeyword, Integer pageNum, Integer pageSize) {
+    public CommonPage<UmsResource> list(Long categoryId, String nameKeyword, String urlKeyword, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum,pageSize);
         Example e = new Example(UmsResource.class);
         Example.Criteria criteria = e.createCriteria();
@@ -37,6 +35,21 @@ public class UmsResourceServiceImpl implements UmsResourceService{
         if(!StringUtils.isEmpty(urlKeyword)){
             criteria.andLike("url",'%'+urlKeyword+'%');
         }
-        return umsResourceMapper.selectByExample(e);
+        return CommonPage.restPage(umsResourceMapper.selectByExample(e));
+    }
+
+    @Override
+    public int insert(UmsResource umsResource) {
+        return umsResourceMapper.insertSelective(umsResource);
+    }
+
+    @Override
+    public int delete(Long resourceId) {
+        return umsResourceMapper.deleteByPrimaryKey(resourceId);
+    }
+
+    @Override
+    public int update(UmsResource umsResource) {
+        return umsResourceMapper.updateByPrimaryKeySelective(umsResource);
     }
 }

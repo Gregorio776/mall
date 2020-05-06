@@ -1,5 +1,6 @@
 package cn.edu.tsu.provider.service;
 
+import cn.edu.tsu.common.dto.CommonPage;
 import cn.edu.tsu.common.dto.ums.UmsMenuNode;
 import cn.edu.tsu.common.model.UmsMenu;
 
@@ -10,7 +11,9 @@ import com.github.pagehelper.PageHelper;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.BeanUtils;
 import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.util.StringUtil;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,12 +24,70 @@ import java.util.stream.Collectors;
 @Service(version = "1.0.0")
 public class UmsMenuServiceImpl implements UmsMenuService{
 
+
+
     @Resource
     private UmsMenuMapper umsMenuMapper;
 
     @Override
     public List<UmsMenu> getMenuList(Long adminId) {
         return umsMenuMapper.getMenuList(adminId);
+    }
+
+    @Override
+    public UmsMenu findByName(String name) {
+        if(StringUtil.isEmpty(name)){
+            return null;
+        }
+        Example e = new Example(UmsMenu.class);
+        e.createCriteria().andEqualTo("name",name);
+        return umsMenuMapper.selectOneByExample(e);
+    }
+
+    @Override
+    public UmsMenu findById(Long menuId) {
+        UmsMenu umsMenu = umsMenuMapper.selectByPrimaryKey(menuId);
+        System.out.println(umsMenu);
+        return umsMenu;
+    }
+
+    @Override
+    public int updateHidden(Long menuId, Integer hidden) {
+        UmsMenu u =new UmsMenu();
+        u.setId(menuId);
+        u.setHidden(hidden);
+        Example e =new Example(UmsMenu.class);
+        e.createCriteria().andEqualTo("id",menuId);
+
+        return umsMenuMapper.updateByPrimaryKeySelective(u);
+    }
+
+    @Override
+    public int update(UmsMenu umsMenu) {
+        return umsMenuMapper.updateByPrimaryKey(umsMenu);
+    }
+
+    @Override
+    public int insert(UmsMenu umsMenu) {
+        UmsMenu umsMenu1 = findByName(umsMenu.getName());
+        if(umsMenu1==null){
+            umsMenu.setCreateTime(new Date());
+            // TODO level 计算
+            if(umsMenu.getParentId().equals(0L)){
+                umsMenu.setLevel(0);
+            }else {
+                umsMenu.setLevel(1);
+            }
+            return umsMenuMapper.insert(umsMenu);
+        }
+        return 0;
+    }
+
+    @Override
+    public int delete(Long menuId) {
+        // TODO 删除策略 1.父菜单删除后子菜单全部删除  2.父菜单删除后将子菜单移到父菜单的父菜单上
+        //
+        return umsMenuMapper.deleteByPrimaryKey(menuId);
     }
 
     @Override
@@ -38,12 +99,12 @@ public class UmsMenuServiceImpl implements UmsMenuService{
     }
 
     @Override
-    public List<UmsMenu> list(Long parentId, Integer pageNum, Integer pageSize) {
+    public CommonPage<UmsMenu> list(Long parentId, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum,pageSize);
         Example e = new Example(UmsMenu.class);
         e.setOrderByClause("sort desc");
         e.createCriteria().andEqualTo("parentId",parentId);
-        return umsMenuMapper.selectByExample(e);
+        return CommonPage.restPage(umsMenuMapper.selectByExample(e));
     }
 
     /**
